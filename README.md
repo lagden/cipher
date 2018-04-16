@@ -4,8 +4,8 @@
 [![XO code style][xo-img]][xo]
 
 
-[npm-img]:         https://img.shields.io/npm/v/@xet/mol.svg
-[npm]:             https://www.npmjs.com/package/@xet/mol
+[npm-img]:         https://img.shields.io/npm/v/@xet/cipher.svg
+[npm]:             https://www.npmjs.com/package/@xet/cipher
 [xo-img]:          https://img.shields.io/badge/code_style-XO-5ed9c7.svg
 [xo]:              https://github.com/sindresorhus/xo
 
