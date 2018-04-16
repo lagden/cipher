@@ -31,7 +31,7 @@ function randomBytes(size = 16) {
 
 /**
  * Environment variables
- * @constant {string}  [CIPHER_KEY=abc1234]     - Segrego utilizado para gerar a cifra e asinatura
+ * @constant {string}  [CIPHER_KEY=abc1234]     - Chave utilizado para gerar a cifra e asinatura
  * @constant {string}  [CIPHER_ALG=aes-128-cbc] - Algoritmo para 'encrypt' e 'decrypt'
  */
 const {
@@ -39,16 +39,16 @@ const {
 	CIPHER_ALG = 'aes-128-cbc'
 } = process.env
 
-const fullkey = md5(CIPHER_KEY).toString('hex')
-const key = fullkey.slice(0, 16)
-
 /**
  * Criptografa um valor
  *
- * @param {string} value - valor
+ * @param {string} value             - valor
+ * @param {string} [_key=CIPHER_KEY] - Chave utilizado para gerar a cifra e asinatura
  * @returns {string}
  */
-function encrypt(value) {
+function encrypt(value, _key = CIPHER_KEY) {
+	const fullkey = md5(_key).toString('hex')
+	const key = fullkey.slice(0, 16)
 	const iv = crypto.randomBytes(16)
 	const cipher = crypto.createCipheriv(CIPHER_ALG, key, iv)
 	cipher.update(Buffer.from(value, 'utf8'))
@@ -62,10 +62,13 @@ function encrypt(value) {
 /**
  * Descriptografa um valor
  *
- * @param {string} encrypted - valor criptografado
+ * @param {string} encrypted         - valor criptografado
+ * @param {string} [_key=CIPHER_KEY] - Chave utilizado para gerar a cifra e asinatura
  * @returns {string}
  */
-function decrypt(encrypted) {
+function decrypt(encrypted, _key = CIPHER_KEY) {
+	const fullkey = md5(_key).toString('hex')
+	const key = fullkey.slice(0, 16)
 	const buf = Buffer.from(encrypted, 'base64')
 	const iv = buf.slice(0, 16)
 	const hmac = buf.slice(16, 48)
