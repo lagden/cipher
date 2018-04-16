@@ -1,0 +1,45 @@
+{
+  "name": "@xet/cipher",
+  "version": "1.0.0",
+  "description": "Encrypt and decrypt",
+  "main": "index.js",
+  "files": [
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "pretest": "xo",
+    "test": "NODE_ENV=test ava",
+    "coverage": "NODE_ENV=test nyc ava"
+  },
+  "keywords": [
+    "crypto",
+    "cipher",
+    "lib"
+  ],
+  "author": "Thiago Lagden",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.9.1"
+  },
+  "devDependencies": {
+    "ava": "0.25.0",
+    "nyc": "11.6.0",
+    "xo": "0.20.3"
+  },
+  "xo": {
+    "envs": [
+      "node"
+    ],
+    "semicolon": false,
+    "rules": {
+      "camelcase": [
+        "error",
+        {
+          "properties": "never"
+        }
+      ],
+      "capitalized-comments": 0
+    }
+  }
+}
