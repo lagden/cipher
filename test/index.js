@@ -1,12 +1,28 @@
 'use strict'
 
 import test from 'ava'
-import {encrypt, decrypt, randomBytes} from '../.'
+import {encrypt, decrypt, randomBytes} from '..'
+// import {encrypt} from '..'
 
 test('encrypt and decrypt', t => {
 	const msg = 'secrect message'
 	const encryptedMsg = encrypt(msg)
 	const r = decrypt(encryptedMsg)
+	t.is(r, msg)
+})
+
+test('[options] encrypt and decrypt', t => {
+	const options = {
+		_algHmac: 'sha1',
+		_alg: 'aes-256-cbc',
+		_size: 16,
+		_sizeKey: 32,
+		_key: 'apenas um show',
+		_encoding: 'hex'
+	}
+	const msg = 'secrect message'
+	const encryptedMsg = encrypt(msg, options)
+	const r = decrypt(encryptedMsg, options)
 	t.is(r, msg)
 })
 
