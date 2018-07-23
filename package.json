@@ -1,6 +1,6 @@
 {
   "name": "@xet/cipher",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Encrypt and decrypt",
   "main": "index.js",
   "files": [
@@ -8,11 +8,9 @@
     "README.md"
   ],
   "scripts": {
-    "xo": "xo",
-    "pretest": "npm run xo",
-    "test": "NODE_ENV=test ava",
-    "pretest-cov": "npm run xo",
-    "test-cov": "NODE_ENV=test nyc ava"
+    "report": "nyc report --reporter=text-lcov | coveralls",
+    "pretest": "xo",
+    "test": "ava"
   },
   "keywords": [
     "crypto",
