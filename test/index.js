@@ -2,7 +2,6 @@
 
 import test from 'ava'
 import {encrypt, decrypt, randomBytes} from '..'
-// import {encrypt} from '..'
 
 test('encrypt and decrypt', t => {
 	const msg = 'secrect message'
@@ -41,4 +40,18 @@ test('decrypt bad', t => {
 test('randomBytes', t => {
 	const buf = randomBytes()
 	t.is(buf.length, 16)
+})
+
+test('encrypt and decrypt with quotes', t => {
+	const msg = 'secrect message "with" "quotes" "more quotes"'
+	const encryptedMsg = encrypt(msg)
+	const r = decrypt(encryptedMsg)
+	t.is(r, msg)
+})
+
+test('more quotes', t => {
+	const msg = '"foo" bar "foo" baz "foo" bar'
+	const encryptedMsg = encrypt(msg)
+	const r = decrypt(encryptedMsg)
+	t.is(r, msg)
 })

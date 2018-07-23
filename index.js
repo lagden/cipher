@@ -60,12 +60,13 @@ function encrypt(value, options = {}) {
 	const key = fullkey.slice(0, _sizeKey)
 	const iv = crypto.randomBytes(_size)
 	const cipher = crypto.createCipheriv(_alg, key, iv)
-	cipher.update(Buffer.from(value, 'utf8'))
-	const encrypted_value = cipher.final()
-	const hmac = crypto.createHmac(_algHmac, fullkey).update(encrypted_value).digest()
-	const totalLength = iv.length + hmac.length + encrypted_value.length
-	const encrypted_buf = Buffer.concat([iv, hmac, encrypted_value], totalLength)
-	return encrypted_buf.toString(_encoding)
+	const encryptedText = cipher.update(value)
+	const encryptedFinal = cipher.final()
+	const encryptedValue = Buffer.concat([encryptedText, encryptedFinal], encryptedText.length + encryptedFinal.length)
+	const hmac = crypto.createHmac(_algHmac, fullkey).update(encryptedValue).digest()
+	const totalLength = iv.length + hmac.length + encryptedValue.length
+	const encryptedBuf = Buffer.concat([iv, hmac, encryptedValue], totalLength)
+	return encryptedBuf.toString(_encoding)
 }
 
 /**
