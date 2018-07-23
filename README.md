@@ -1,11 +1,14 @@
 # Cipher
 
 [![NPM version][npm-img]][npm]
+[![Build Status][ci-img]][ci]
 [![XO code style][xo-img]][xo]
 
 
 [npm-img]:         https://img.shields.io/npm/v/@xet/cipher.svg
 [npm]:             https://www.npmjs.com/package/@xet/cipher
+[ci-img]:          https://travis-ci.org/lagden/cipher.svg
+[ci]:              https://travis-ci.org/lagden/cipher
 [xo-img]:          https://img.shields.io/badge/code_style-XO-5ed9c7.svg
 [xo]:              https://github.com/sindresorhus/xo
 
@@ -60,6 +63,7 @@ const r = decrypt(encryptedMsg, options)
 ## Team
 
 [<img src="https://avatars.githubusercontent.com/u/130963?s=390" alt="Thiago Lagden" width="100">](http://lagden.in)
+[<img src="https://avatars.githubusercontent.com/u/31932885?s=390" alt="Thin" width="100">](https://github.com/ThinMingLeongChen)
 
 
 ## License
