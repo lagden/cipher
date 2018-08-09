@@ -31,10 +31,10 @@ Simple usage
 const {encrypt, decrypt} = require('@xet/cipher')
 
 const msg = 'secrect message'
-const encryptedMsg = encrypt(msg)
-// => R6Sgvs8UdiPhPiHwyH+5REMEhK2NTsRT+tRjnhfAyN3skLc1vALrvQVk229rq3fHuopncGb+fiQSUfkuWc7W8A==
+const encrypted = encrypt(msg)
+// => 3GiXInSVcUt4ycYWTEG64YRYAik02hCg6K+L0abtEtII/Fj7NzFSkx0BsOZElOBP8iWwfjXcwpZrCAVdnSViMg==
 
-const r = decrypt(encryptedMsg)
+const decrypted = decrypt(encryptedMsg)
 // => secrect message
 ```
 
@@ -45,17 +45,18 @@ const {encrypt, decrypt} = require('@xet/cipher')
 
 const options = {
   _algHmac: 'sha1',
-  _alg: 'aes-256-cbc',
-  _size: 16,
-  _sizeKey: 32,
+  _algCypher: 'aes-256-cbc',
   _key: 'apenas um show',
-  _encoding: 'hex'
+  _outputEncoding: 'hex',
+  _sizeKey: 32,
+  _sizeIV: 16
 }
-const msg = 'secrect message'
-const encryptedMsg = encrypt(msg, options)
-// => 03a37b7e5921f5322523dbc6632cf1beceb5db0ddd7edb26f90c7fbffb5b7d1987eaac68db4e21b9496ebc580ac73342bbc7cd1b
 
-const r = decrypt(encryptedMsg, options)
+const msg = 'secrect message'
+const encrypted = encrypt(msg, options)
+// => 55e163eedaecff78fb278f247376bcddbaddbd98a4d3a7c2ab79d142a1f572f7eed3dbede31af5bbbfadeee9356449c5d5b25103
+
+const decrypted = decrypt(encryptedMsg, options)
 // => secrect message
 ```
 

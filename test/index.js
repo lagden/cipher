@@ -1,7 +1,7 @@
 'use strict'
 
 import test from 'ava'
-import {encrypt, decrypt, randomBytes} from '..'
+import {encrypt, decrypt, randomBytes, generateKey} from '..'
 
 test('encrypt and decrypt', t => {
 	const msg = 'secrect message'
@@ -13,11 +13,11 @@ test('encrypt and decrypt', t => {
 test('[options] encrypt and decrypt', t => {
 	const options = {
 		_algHmac: 'sha1',
-		_alg: 'aes-256-cbc',
-		_size: 16,
-		_sizeKey: 32,
+		_algCypher: 'aes-256-cbc',
 		_key: 'apenas um show',
-		_encoding: 'hex'
+		_outputEncoding: 'hex',
+		_sizeKey: 32,
+		_sizeIV: 16
 	}
 	const msg = 'secrect message'
 	const encryptedMsg = encrypt(msg, options)
@@ -26,7 +26,7 @@ test('[options] encrypt and decrypt', t => {
 })
 
 test('decrypt invalid', t => {
-	const r = decrypt('uXEA3zxqr2TGfttsEE5IkXOzQXhvYdkLrBE92Wchaau40Aqu+EKJFEjwrF6YPulDfqglkEkXSvLW7qmHj48oIA==')
+	const r = decrypt('31iYCFe7Vvf2eqL527cJdyFsauA6kRI4z9umescFHxjTh4Sc7Vw9Fliga2Sy4QdwA3TP0uMmtGvF1B3pZ4dbwg==')
 	t.false(r)
 })
 
@@ -40,6 +40,12 @@ test('decrypt bad', t => {
 test('randomBytes', t => {
 	const buf = randomBytes()
 	t.is(buf.length, 16)
+})
+
+test('generateKey', t => {
+	const buf = generateKey('my key')
+	t.is(buf.length, 16)
+	t.is(buf.toString('hex'), '6acd55361508378a866422bf737beae6')
 })
 
 test('encrypt and decrypt with quotes', t => {
