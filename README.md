@@ -16,6 +16,7 @@
 
 Encrypt and decrypt
 
+
 ## Install
 
 ```
@@ -32,7 +33,7 @@ const {encrypt, decrypt} = require('@xet/cipher')
 
 const msg = 'secrect message'
 const encrypted = encrypt(msg)
-// => 3GiXInSVcUt4ycYWTEG64YRYAik02hCg6K+L0abtEtII/Fj7NzFSkx0BsOZElOBP8iWwfjXcwpZrCAVdnSViMg==
+// => JkE4Mu4CBw3uaG1b6/1KQ118k2zBzARN/vyyaXmXxRtf1cjMCjhltvsJVd2wGnd90mTowHvc1h8JqCT1VbJVNw==
 
 const decrypted = decrypt(encryptedMsg)
 // => secrect message
@@ -48,13 +49,14 @@ const options = {
   _algCypher: 'aes-256-cbc',
   _key: 'apenas um show',
   _outputEncoding: 'hex',
-  _sizeKey: 32,
-  _sizeIV: 16
+  _lenKey: 32,
+  _lenIV: 16,
+  _useHex: true
 }
 
 const msg = 'secrect message'
 const encrypted = encrypt(msg, options)
-// => 55e163eedaecff78fb278f247376bcddbaddbd98a4d3a7c2ab79d142a1f572f7eed3dbede31af5bbbfadeee9356449c5d5b25103
+// => aa4ec6cb1747a3b6ad161aeeba3ace7e16e11866c3eedea0c994329d250d275be3a43011ff9ac5fba62510cf60eafaeb3617507b
 
 const decrypted = decrypt(encryptedMsg, options)
 // => secrect message

@@ -3,120 +3,95 @@
  * @module index
  */
 
-/* eslint camelcase: 0 */
-
 'use strict'
 
 const crypto = require('crypto')
 
 /**
- * Gera um hash
- *
- * @param {string} salt - Valor
- * @param {int} [size=16] size - Tamanho de bytes
- * @param {string} [alg='sha512'] - Algoritmo
- * @returns {buffer} - Retorna um bufer
- */
-function _genKey(salt, size = 16, alg = 'sha512') {
-	const buf = crypto.createHash(alg).update(salt).digest()
-	return buf.slice(0, size)
-}
-
-/**
- * Gera um buffer randômico
- *
- * @param {int} size - Tamanho de bytes
- * @returns {buffer} - Retorna um bufer
- */
-function randomBytes(size = 16) {
-	return crypto.randomBytes(size)
-}
-
-/**
- * Environment variables
- * @constant {string}  [CIPHER_KEY=abc1234]     - Chave utilizado para gerar a cifra
- * @constant {string}  [CIPHER_ALG=aes-128-cbc] - Algoritmo para cifra
- * @constant {string}  [HMAC_ALG=sha256]        - Algoritmo para o HMAC
- */
-const {
-	CIPHER_KEY = '08406a6e18bdf83010ddd1187251454d',
-	CIPHER_ALG = 'aes-128-cbc',
-	HMAC_ALG = 'sha256'
-} = process.env
-
-/**
  * Criptografa um valor
  *
- * @param {string} value                             - Valor
- * @param {object} [options={}]                      - Opções
- * @param {string} [options._algHmac=HMAC_ALG]       - Algoritmo para o HMAC
- * @param {string} [options._alg=CIPHER_ALG]         - Algoritmo para cifra
- * @param {string} [options._key=CIPHER_KEY]         - Chave
- * @param {string} [options._outputEncoding=base64]  - Codificação de caracteres
- * @param {int}    [options._sizeKey=16]             - Tamanho da chave
- * @param {int}    [options._sizeIV=16]              - Tamanho do IV
- * @returns {string}                                 - Retorna o valor criptografado
+ * @param {string} value                                           - Valor
+ * @param {object} [options={}]                                    - Opções
+ * @param {string} [options._algHmac=sha256]                       - Algoritmo para o HMAC
+ * @param {string} [options._algCypher=aes-128-cbc]                - Algoritmo para cifra
+ * @param {string} [options._algKey=sha512]                        - Algoritmo para chave
+ * @param {string} [options._key=08406a6e18bdf83010ddd1187251454d] - Chave
+ * @param {string} [options._outputEncoding=base64]                - Codificação de caracteres
+ * @param {int}    [options._lenKey=16]                            - Tamanho da chave
+ * @param {int}    [options._lenIV=16]                             - Tamanho do IV
+ * @param {int}    [options._useHex=false]                         - Utiliza no formato hexadecimal
+ * @returns {string}                                               - Retorna o valor criptografado
  */
 function encrypt(value, options = {}) {
 	const {
-		_algHmac = HMAC_ALG,
-		_algCypher = CIPHER_ALG,
-		_key = CIPHER_KEY,
+		_algHmac = 'sha256',
+		_algCypher = 'aes-128-cbc',
+		_algKey = 'sha512',
+		_key = '08406a6e18bdf83010ddd1187251454d',
 		_outputEncoding = 'base64',
-		_sizeKey = 16,
-		_sizeIV = 16
+		_lenKey = 16,
+		_lenIV = 16,
+		_useHex = false
 	} = options
-	const key = _genKey(_key, _sizeKey)
-	const iv = randomBytes(_sizeIV)
+	const keyBuff = crypto.createHash(_algKey).update(_key).digest()
+	const keyHash = _useHex ? keyBuff.toString('hex') : keyBuff
+	// _lenKey = crypto.cipherkeyLength(_algCypher)
+	const key = keyHash.slice(0, _lenKey)
+	const iv = crypto.randomBytes(_lenIV)
 	const cipher = crypto.createCipheriv(_algCypher, key, iv)
 	const encryptedUpdate = cipher.update(value)
 	const encryptedFinal = cipher.final()
 	const encrypted = Buffer.concat([encryptedUpdate, encryptedFinal], encryptedUpdate.length + encryptedFinal.length)
-	const hmac = crypto.createHmac(_algHmac, key).update(encrypted).digest()
-	const totalLength = iv.length + hmac.length + encrypted.length
-	const resultBuff = Buffer.concat([iv, hmac, encrypted], totalLength)
-	return resultBuff.toString(_outputEncoding)
+	const hmac = crypto.createHmac(_algHmac, keyHash).update(encrypted).digest()
+	const result = Buffer.concat([iv, hmac, encrypted], iv.length + hmac.length + encrypted.length)
+	return result.toString(_outputEncoding)
 }
 
 /**
  * Descriptografa um valor
  *
- * @param {string} encrypted                        - Valor criptografado
- * @param {object} [options={}]                      - Opções
- * @param {string} [options._algHmac=HMAC_ALG]       - Algoritmo para o HMAC
- * @param {string} [options._alg=CIPHER_ALG]         - Algoritmo para cifra
- * @param {string} [options._key=CIPHER_KEY]         - Chave
- * @param {string} [options._outputEncoding=base64]  - Codificação de caracteres
- * @param {int}    [options._sizeKey=16]             - Tamanho da chave
- * @param {int}    [options._sizeIV=16]              - Tamanho do IV
- * @returns {(string|boolean)}                      - Retorna o valor descriptografado ou false
+ * @param {string} encryptedValue                                  - Valor criptografado
+ * @param {object} [options={}]                                    - Opções
+ * @param {string} [options._algHmac=sha256]                       - Algoritmo para o HMAC
+ * @param {string} [options._algCypher=aes-128-cbc]                - Algoritmo para cifra
+ * @param {string} [options._algKey=sha512]                        - Algoritmo para chave
+ * @param {string} [options._key=08406a6e18bdf83010ddd1187251454d] - Chave
+ * @param {string} [options._outputEncoding=base64]                - Codificação de caracteres
+ * @param {int}    [options._lenKey=16]                            - Tamanho da chave
+ * @param {int}    [options._lenIV=16]                             - Tamanho do IV
+ * @param {int}    [options._useHex=false]                         - Utiliza no formato hexadecimal
+ * @returns {(string|boolean)}                                     - Retorna o valor descriptografado ou false
  */
-function decrypt(encrypted, options = {}) {
+function decrypt(encryptedValue, options = {}) {
 	const {
-		_algHmac = HMAC_ALG,
-		_algCypher = CIPHER_ALG,
-		_key = CIPHER_KEY,
+		_algHmac = 'sha256',
+		_algCypher = 'aes-128-cbc',
+		_algKey = 'sha512',
+		_key = '08406a6e18bdf83010ddd1187251454d',
 		_outputEncoding = 'base64',
-		_sizeKey = 16,
-		_sizeIV = 16
+		_lenKey = 16,
+		_lenIV = 16,
+		_useHex = false
 	} = options
-	const _algSize = {sha1: 20, sha256: 32, sha512: 64}
-	const buf = Buffer.from(encrypted, _outputEncoding)
-	const key = _genKey(_key, _sizeKey)
-	const iv = buf.slice(0, _sizeIV)
-	const hmac = buf.slice(_sizeIV, _algSize[_algHmac] + _sizeIV)
-	const encrypted_value = buf.slice(_sizeIV + _algSize[_algHmac])
-	const _hmac = crypto.createHmac(_algHmac, key).update(encrypted_value).digest()
+	const _lenAlg = {sha1: 20, sha256: 32, sha512: 64}
+	const keyBuff = crypto.createHash(_algKey).update(_key).digest()
+	const keyHash = _useHex ? keyBuff.toString('hex') : keyBuff
+	// _lenKey = crypto.cipherkeyLength(_algCypher)
+	const key = keyHash.slice(0, _lenKey)
+	const buf = Buffer.from(encryptedValue, _outputEncoding)
+	const iv = buf.slice(0, _lenIV)
+	const hmac = buf.slice(_lenIV, _lenIV + _lenAlg[_algHmac])
+	const encrypted = buf.slice(_lenIV + _lenAlg[_algHmac])
+	const _hmac = crypto.createHmac(_algHmac, keyHash).update(encrypted).digest()
 	const decipher = crypto.createDecipheriv(_algCypher, key, iv)
-	let decrypted = decipher.update(encrypted_value)
-	decrypted += decipher.final()
+	const decryptedUpdate = decipher.update(encrypted)
+	const decryptedFinal = decipher.final()
+	const decrypted = Buffer.concat([decryptedUpdate, decryptedFinal], decryptedUpdate.length + decryptedFinal.length)
 	if (crypto.timingSafeEqual(hmac, _hmac)) {
-		return decrypted
+		return decrypted.toString('utf8')
 	}
 	return false
 }
 
 exports.encrypt = encrypt
 exports.decrypt = decrypt
-exports.randomBytes = randomBytes
-exports.generateKey = _genKey

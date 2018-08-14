@@ -1,7 +1,7 @@
 'use strict'
 
 import test from 'ava'
-import {encrypt, decrypt, randomBytes, generateKey} from '..'
+import {encrypt, decrypt} from '..'
 
 test('encrypt and decrypt', t => {
 	const msg = 'secrect message'
@@ -16,8 +16,9 @@ test('[options] encrypt and decrypt', t => {
 		_algCypher: 'aes-256-cbc',
 		_key: 'apenas um show',
 		_outputEncoding: 'hex',
-		_sizeKey: 32,
-		_sizeIV: 16
+		_lenKey: 32,
+		_lenIV: 16,
+		_useHex: true
 	}
 	const msg = 'secrect message'
 	const encryptedMsg = encrypt(msg, options)
@@ -37,15 +38,16 @@ test('decrypt bad', t => {
 	t.is(error.message, 'error:06065064:digital envelope routines:EVP_DecryptFinal_ex:bad decrypt')
 })
 
-test('randomBytes', t => {
-	const buf = randomBytes()
-	t.is(buf.length, 16)
-})
-
-test('generateKey', t => {
-	const buf = generateKey('my key')
-	t.is(buf.length, 16)
-	t.is(buf.toString('hex'), '6acd55361508378a866422bf737beae6')
+test('decrypt md5', t => {
+	const msg = 'X1r4a*y9bd4'
+	const options = {
+		_algKey: 'md5',
+		_key: 'NimbleRulezz',
+		_useHex: true
+	}
+	const encryptedMsg = '8RCl8A60Rj7dhdC1sUrUeuVtsdPq00cWze18+Bos9X2YMCbF9sQMdGTDVcF2c8yZnK13Uwh30Yb3gj7jkCd4tA=='
+	const r = decrypt(encryptedMsg, options)
+	t.is(r, msg)
 })
 
 test('encrypt and decrypt with quotes', t => {
@@ -60,4 +62,14 @@ test('more quotes', t => {
 	const encryptedMsg = encrypt(msg)
 	const r = decrypt(encryptedMsg)
 	t.is(r, msg)
+})
+
+test('chat test', t => {
+	const encryptedMsg = 'LXPxb+Failp9DxQtsy5Zqsr8UZ8TBKkQz69hhglajXsZ/Ql8zXA9In2fO/J6d0h63CWrdyXeqHA41IgcPRQnHQ=='
+	const r = decrypt(encryptedMsg, {
+		_algKey: 'md5',
+		_key: '37046_222855',
+		_useHex: true
+	})
+	t.is(r, 'Hi!')
 })
