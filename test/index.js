@@ -39,13 +39,13 @@ test('decrypt bad', t => {
 })
 
 test('decrypt md5', t => {
-	const msg = 'X1r4a*y9bd4'
+	const msg = 'MBNimbk%r4B$a4'
 	const options = {
 		_algKey: 'md5',
 		_key: 'NimbleRulezz',
 		_useHex: true
 	}
-	const encryptedMsg = '8RCl8A60Rj7dhdC1sUrUeuVtsdPq00cWze18+Bos9X2YMCbF9sQMdGTDVcF2c8yZnK13Uwh30Yb3gj7jkCd4tA=='
+	const encryptedMsg = 'EKSP4pUeu77b/RFsD1UpMynX8LPfqLIvwMDlOmFbap4Km9IuX10AxSfdOsOucAZggdH2mqutMo/zLl1ta9dSVg=='
 	const r = decrypt(encryptedMsg, options)
 	t.is(r, msg)
 })
