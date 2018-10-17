@@ -2,6 +2,7 @@
   "name": "@xet/cipher",
   "version": "3.0.0",
   "description": "Encrypt and decrypt",
+  "repository": "lagden/cipher",
   "main": "index.js",
   "files": [
     "LICENSE",
