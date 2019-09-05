@@ -90,6 +90,7 @@ function decrypt(encryptedValue, options = {}) {
 	if (crypto.timingSafeEqual(hmac, _hmac)) {
 		return decrypted.toString('utf8')
 	}
+
 	return false
 }
 
