@@ -8,6 +8,22 @@
 const crypto = require('crypto')
 
 /**
+ * Verifica se os valores são idênticos
+ * @private
+ *
+ * @param {Buffer} a - Valor A
+ * @param {Buffer} a - Valor B
+ * @returns {boolean} Retorna true ou false
+ */
+function _isValid(a, b) {
+	try {
+		return crypto.timingSafeEqual(a, b)
+	} catch {
+		return false
+	}
+}
+
+/**
  * Criptografa um valor
  *
  * @param {string} value                                           - Valor
@@ -87,7 +103,7 @@ function decrypt(encryptedValue, options = {}) {
 	const decryptedUpdate = decipher.update(encrypted)
 	const decryptedFinal = decipher.final()
 	const decrypted = Buffer.concat([decryptedUpdate, decryptedFinal], decryptedUpdate.length + decryptedFinal.length)
-	if (crypto.timingSafeEqual(hmac, _hmac)) {
+	if (_isValid(hmac, _hmac)) {
 		return decrypted.toString('utf8')
 	}
 
