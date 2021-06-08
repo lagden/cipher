@@ -6,6 +6,7 @@
   "main": "src/cipher.js",
   "type": "module",
   "files": [
+    "src",
     "LICENSE",
     "README.md"
   ],
