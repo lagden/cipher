@@ -1,18 +1,14 @@
 {
   "name": "@xet/cipher",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Encrypt and decrypt",
   "repository": "lagden/cipher",
-  "main": "index.js",
+  "main": "src/cipher.js",
+  "type": "module",
   "files": [
     "LICENSE",
     "README.md"
   ],
-  "scripts": {
-    "report": "nyc report --reporter=text-lcov | coveralls",
-    "pretest": "xo",
-    "test": "ava"
-  },
   "keywords": [
     "crypto",
     "cipher",
@@ -23,24 +19,34 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "devDependencies": {
-    "ava": "3.15.0",
-    "xo": "0.38.2"
+  "scripts": {
+    "eslint": "eslint --config .eslintrc.cjs --ext .js --ignore-path .gitignore .",
+    "pretest": "npm run eslint",
+    "test": "c8 --reporter=text --reporter=lcov ava"
   },
-  "xo": {
-    "envs": [
-      "node"
-    ],
-    "semicolon": false,
-    "rules": {
-      "camelcase": [
-        "error",
+  "devDependencies": {
+    "@babel/core": "7.14.3",
+    "@babel/eslint-parser": "7.14.4",
+    "@babel/plugin-syntax-top-level-await": "7.12.13",
+    "@babel/preset-env": "7.14.4",
+    "ava": "3.15.0",
+    "c8": "7.7.2",
+    "eslint": "7.28.0",
+    "eslint-plugin-unicorn": "33.0.1"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
         {
-          "properties": "never"
+          "targets": {
+            "node": "current"
+          }
         }
-      ],
-      "capitalized-comments": 0,
-      "unicorn/prevent-abbreviations": 0
-    }
+      ]
+    ],
+    "plugins": [
+      "@babel/plugin-syntax-top-level-await"
+    ]
   }
 }

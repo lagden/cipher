@@ -3,25 +3,7 @@
  * @module index
  */
 
-'use strict'
-
-const crypto = require('crypto')
-
-/**
- * Verifica se os valores são idênticos
- * @private
- *
- * @param {Buffer} a - Valor A
- * @param {Buffer} a - Valor B
- * @returns {boolean} Retorna true ou false
- */
-function _isValid(a, b) {
-	try {
-		return crypto.timingSafeEqual(a, b)
-	} catch {
-		return false
-	}
-}
+import crypto from 'node:crypto'
 
 /**
  * Criptografa um valor
@@ -38,7 +20,7 @@ function _isValid(a, b) {
  * @param {int}    [options._useHex=false]                         - Utiliza no formato hexadecimal
  * @returns {string}                                               - Retorna o valor criptografado
  */
-function encrypt(value, options = {}) {
+export function encrypt(value, options = {}) {
 	const {
 		_algHmac = 'sha256',
 		_algCypher = 'aes-128-cbc',
@@ -78,7 +60,7 @@ function encrypt(value, options = {}) {
  * @param {int}    [options._useHex=false]                         - Utiliza no formato hexadecimal
  * @returns {(string|boolean)}                                     - Retorna o valor descriptografado ou false
  */
-function decrypt(encryptedValue, options = {}) {
+export function decrypt(encryptedValue, options = {}) {
 	const {
 		_algHmac = 'sha256',
 		_algCypher = 'aes-128-cbc',
@@ -103,12 +85,5 @@ function decrypt(encryptedValue, options = {}) {
 	const decryptedUpdate = decipher.update(encrypted)
 	const decryptedFinal = decipher.final()
 	const decrypted = Buffer.concat([decryptedUpdate, decryptedFinal], decryptedUpdate.length + decryptedFinal.length)
-	if (_isValid(hmac, _hmac)) {
-		return decrypted.toString('utf8')
-	}
-
-	return false
+	return crypto.timingSafeEqual(hmac, _hmac) && decrypted.toString('utf8')
 }
-
-exports.encrypt = encrypt
-exports.decrypt = decrypt

@@ -1,7 +1,5 @@
-'use strict'
-
-const test = require('ava')
-const {encrypt, decrypt} = require('..')
+import test from 'ava'
+import {encrypt, decrypt} from '../src/cipher.js'
 
 test('encrypt and decrypt', t => {
 	const msg = 'secrect message'
